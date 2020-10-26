@@ -76,22 +76,22 @@ namespace LDP_MJU20_Uppgift
 
             if(!yearBiciesto && month == 2 && day > 28)
             {
-
+                
             }
 
             if (month == 2 && day > 29)
             {
-
+                WriteLine("Introduce a day valid for this month");
             }
 
             if (month30.Any(x => x == month) && day > 30)
             {
-
+                WriteLine("Introduce a day valid for this month");
             }
 
             if (day > 31)
             {
-
+                WriteLine("Introduce a day valid for this month");
             }
 
         }
