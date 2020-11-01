@@ -13,22 +13,40 @@ namespace LDP_MJU20_Uppgift
     
         private static void ValidationPersonalNumber()
         {
-            WriteLine("Please introduce your personal number YYYYMMDDnnnc: ");
+            WriteLine("Please introduce your personal number in the following formats:\n 1. YYYYMMDDnnnc: 2. YYYYMMDD+nnnc: 3.YYYYMMDD-nnnc: 4.YYMMDD-nnnc: 5.YYMMDD+nnnc: 6.YYMMDDnnnc");
             string personalNumber = ReadLine();
+            char[] arrayPersonNumber = personalNumber.ToCharArray();
+
+            //Removing char: - and + for to do the rest of the calculations
+            if(
+                (arrayPersonNumber.Any(c => c.ToString() == "-") 
+                    || arrayPersonNumber.Any(c => c.ToString() == "+")) 
+                && !(arrayPersonNumber[arrayPersonNumber.Length - 5].ToString() == "-"
+                    || arrayPersonNumber[arrayPersonNumber.Length -5].ToString() == "+"))
+            {
+                WriteLine("Character (-/+) in a wrong position, try again!");
+                ValidationPersonalNumber();
+                return;
+            }
+
             personalNumber = personalNumber.Replace("+", "");
             personalNumber = personalNumber.Replace("-", "");
 
             if (personalNumber.Length == 10)
                 personalNumber = "19" + personalNumber;
 
-            int year = 0, month = 0, day = 0, nnnBirthNumber = 0, cLastNumber = 0;
+            int year = 0;
+            int month = 0;
+            int day = 0;
+            int nnnBirthNumber = 0;
+            int cLastNumber = 0;
             bool isWoman = false;
             bool isMan = false;
 
-            char[] arrayPersonNumber = personalNumber.ToCharArray();
+            arrayPersonNumber = personalNumber.ToCharArray();
             if (arrayPersonNumber.Length != 12)
             {
-                WriteLine("Format invalid: You must introduce 10 or 12 numbers");
+                WriteLine("Format invalid: You must introduce 10 or 12 NUMBERS(NOT chararcter)");
                 ValidationPersonalNumber();
                 return;
             }
@@ -107,7 +125,7 @@ namespace LDP_MJU20_Uppgift
             }
             else
             {
-                WriteLine("Introduce a right gender");
+                WriteLine("Introduce a valid personal number");
             }
 
 
@@ -144,7 +162,7 @@ namespace LDP_MJU20_Uppgift
 
             if (!leapYear && month == 2 && day > 28)
             {
-                WriteLine("This year is not Leap year you can´t introduce more than 28 days in february");
+                WriteLine("This year is not a Leap year, you can´t introduce more than 28 days in february");
                 ValidationPersonalNumber();
                 return;
             }
@@ -163,7 +181,7 @@ namespace LDP_MJU20_Uppgift
                 return;
             }
 
-            //Birthday number validation
+            //Birthday number nnn validation
 
             if (!(nnnBirthNumber >= 0 && nnnBirthNumber <= 999) )
             {
@@ -171,8 +189,9 @@ namespace LDP_MJU20_Uppgift
                 ValidationPersonalNumber();
                 return;
             }
+            //Evaluating the year 
             string date = "" + year + "-" + month + "-" + day; 
-            if(DateTime.Now < DateTime.Parse(date))
+            if(DateTime.Parse("2021-01-01") < DateTime.Parse(date))
             {
                 WriteLine("Introduce a valid date!");
                 ValidationPersonalNumber();
@@ -181,20 +200,20 @@ namespace LDP_MJU20_Uppgift
 
             if (!luhn(personalNumber))
             {
-                WriteLine("Control digit by Lunh algorith is NOT validate");
+                WriteLine("Control digit by Luhn algorithm is NOT valid, try again!");
                 ValidationPersonalNumber();
                 return;
             }
 
-            WriteLine("This personal number has been verificated with Lunh algorith");
+            WriteLine("This personal number by Luhn algorithm is RIGHT");
             WriteLine("This personal number is valid");
             if (isWoman)
             {
-                Write("This personal number belongs to a Woman");
+                Write("This personal number belongs to a Woman \n");
             }
             else if (isMan)
             {
-                Write("This personal number belongs to a Man");
+                Write("This personal number belongs to a Man \n");
             }
             else
             {
@@ -210,13 +229,13 @@ namespace LDP_MJU20_Uppgift
 
         static bool luhn(string personalNumber)
         {
-            // Dividirlo en caracteres y hacer un arreglo 
+            // Split char for to do the Array
             char[] perNumArray = personalNumber.ToCharArray();
-            // Ciclo
+            // Loop
             int sum = 0;
             int multiplicator = 2;
-            int initCilce = perNumArray.Length == 12 ? 2 : 0;
-            for (int i = initCilce; i < personalNumber.Length -1; i++)
+            int initLoop = perNumArray.Length == 12 ? 2 : 0;
+            for (int i = initLoop; i < personalNumber.Length -1; i++)
             {
                 int digit = int.Parse(perNumArray[i].ToString());
                 int res = digit * multiplicator;
